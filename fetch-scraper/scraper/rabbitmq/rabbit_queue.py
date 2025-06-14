@@ -42,7 +42,7 @@ class RabbitQueue:
             exchange="", routing_key=self.queue_name, body=message, properties=pika.BasicProperties(delivery_mode=2)
         )
 
-    def receive_message(self, ch, method, properties, body):
+    def receive_message(self, ch, method, _, body):
         logger.info("[+] Received: %s", body.decode())
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
