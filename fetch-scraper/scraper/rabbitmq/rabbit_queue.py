@@ -37,7 +37,7 @@ class RabbitQueue:
         self.queue_name = queue_name
         self.channel.queue_declare(queue=queue_name, durable=True)
 
-    def send_message(self, message: str):
+    def send_message(self, message: bytes):
         self.channel.basic_publish(
             exchange="", routing_key=self.queue_name, body=message, properties=pika.BasicProperties(delivery_mode=2)
         )

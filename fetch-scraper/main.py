@@ -16,7 +16,8 @@ logger = create_logger()
 def producer_thread_worker(producer: Producer, queue: RabbitQueue):
     data = producer.consume()
     logger.info("[-] Produced data %s", data)
-    queue.send_message(data)
+    for item in data:
+        queue.send_message(producer.serialise(item))
 
 
 if __name__ == "__main__":

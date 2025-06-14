@@ -28,3 +28,11 @@ class Producer(ABC, Generic[T]):
         Abstract method to convert some T to bytes
         """
         pass
+
+    @abstractmethod
+    def get_id(self, item) -> str:
+        """
+        Returns a unique ID for a given item.
+
+        Ideally does some hashing (or generate a UUID), but can be static for debug producers.
+        """
