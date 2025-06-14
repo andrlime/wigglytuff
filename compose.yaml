@@ -10,6 +10,29 @@ services:
     expose:
       - "5672"
     restart: unless-stopped
+  db-cache:
+    image: andrewli2048/cache
+    build:
+      context: db-cache
+      dockerfile: docker/Dockerfile
+      target: ${BUILD_TARGET:-dev}
+    develop:
+      watch:
+        - action: sync
+          path: db-cache/
+          target: /app/
+        - action: rebuild
+          path: db-cache/go.*
+    environment:
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    stop_signal: SIGTERM
+    restart: always
+    # healthcheck:
+    #   test: ["CMD", "bash", "-c", "find /tmp/healthy -mmin -1"]
+    #   interval: 30s
+    #   timeout: 3s
+    #   retries: 2
   fetch-scraper:
     image: andrewli2048/scraper
     build:

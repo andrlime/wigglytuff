@@ -1,0 +1,20 @@
+version: '3'
+vars:
+  APP_NAME: db-cache
+tasks:
+  run:
+    cmds:
+      - go run core/main/main.go
+    aliases:
+      - r
+  build:
+    cmds:
+      - go build -o ./bin/{{.APP_NAME}} ./core/main/main.go
+    aliases:
+      - b
+  run-build:
+    cmds:
+      - task: build
+      - ./bin/{{.APP_NAME}}
+    aliases:
+      - rb
