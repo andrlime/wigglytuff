@@ -1,0 +1,33 @@
+# https://taskfile.dev
+
+version: "3"
+
+dotenv: [".env"]
+
+tasks:
+  init:
+    cmds:
+      - poetry install
+  lint:
+    cmds:
+      - poetry run pylint --rcfile pylintrc .
+      - poetry run mypy notifier
+      - poetry run ruff check notifier
+      - poetry run ruff format --check notifier
+  lint-diff:
+    cmds:
+      - poetry run ruff format --diff notifier
+  format:
+    cmds:
+      - poetry run black --line-length 120 .
+      - poetry run ruff check --fix
+  prod:
+    cmds:
+      - poetry run waitress-serve --port=$PORT_NUMBER --call gateway.flask.factory:create_flask_app
+  build-dev:
+    cmds:
+      - docker build -t andrewli2048/notifier-backend -f docker/Dockerfile .
+  run-dev:
+    cmds:
+      - task: build-dev
+      - docker run --rm -p 9000:9000 --name notifier-backend andrewli2048/notifier-backend

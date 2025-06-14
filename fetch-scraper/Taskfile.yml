@@ -1,0 +1,30 @@
+# https://taskfile.dev
+
+version: "3"
+
+dotenv: [".env"]
+
+tasks:
+  init:
+    cmds:
+      - poetry install
+  lint:
+    cmds:
+      - poetry run pylint --rcfile pylintrc .
+      - poetry run mypy scraper
+      - poetry run ruff check scraper
+      - poetry run ruff format --check scraper
+  lint-diff:
+    cmds:
+      - poetry run ruff format --diff scraper
+  format:
+    cmds:
+      - poetry run black --line-length 120 .
+      - poetry run ruff check --fix
+  build-dev:
+    cmds:
+      - docker build -t andrewli2048/scraper-backend -f docker/Dockerfile .
+  run:
+    cmds:
+      - task: build-dev
+      - poetry run python3 main.py

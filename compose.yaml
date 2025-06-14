@@ -1,0 +1,47 @@
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "15672:15672"
+    expose:
+      - "5672"
+    restart: unless-stopped
+  fetch-scraper:
+    image: andrewli2048/scraper
+    build:
+      context: fetch-scraper
+      dockerfile: docker/Dockerfile
+      target: ${BUILD_TARGET:-dev}
+    develop:
+      watch:
+        - action: sync
+          path: fetch-scraper/scraper
+          target: /app/scraper
+        - action: rebuild
+          path: fetch-scraper/pyproject.toml
+    environment:
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+    stop_signal: SIGTERM
+    restart: always
+  # bot-notifier:
+  #   image: andrewli2048/notifier
+  #   build:
+  #     context: bot-notifier
+  #     dockerfile: docker/Dockerfile
+  #     target: ${BUILD_TARGET:-dev}
+  #   develop:
+  #     watch:
+  #       - action: sync
+  #         path: bot-notifier/notifier
+  #         target: /app/notifier
+  #       - action: rebuild
+  #         path: bot-notifier/pyproject.toml
+  #   ports:
+  #     - "9000:9000"
+  #   stop_signal: SIGTERM
+  #   restart: always

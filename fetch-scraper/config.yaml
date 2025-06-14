@@ -1,0 +1,6 @@
+interval: 3
+rabbitmq:
+  hostname: rabbitmq
+  port: 5672
+  queue_name: job-message-queue
+  debug_mode: true
