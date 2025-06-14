@@ -23,7 +23,7 @@ tasks:
       - poetry run ruff check --fix
   build-dev:
     cmds:
-      - docker build -t andrewli2048/scraper-backend -f docker/Dockerfile .
+      - docker build -t andrewli2048/scraper -f docker/Dockerfile .
   run:
     cmds:
       - task: build-dev
