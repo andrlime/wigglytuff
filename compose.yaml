@@ -28,6 +28,11 @@ services:
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
     stop_signal: SIGTERM
     restart: always
+    healthcheck:
+      test: ["CMD", "bash", "-c", "find /tmp/healthy -mmin -1"]
+      interval: 30s
+      timeout: 3s
+      retries: 2
   # bot-notifier:
   #   image: andrewli2048/notifier
   #   build:

@@ -13,6 +13,11 @@ from scraper.producers import Producer, producers
 logger = create_logger()
 
 
+def health_check():
+    with open("/tmp/healthy", "w") as f:
+        f.write(str(time.time()))
+
+
 def producer_thread_worker(producer: Producer, queue: RabbitQueue):
     data = producer.consume()
     logger.info("[-] Produced data %s", data)
@@ -36,6 +41,7 @@ if __name__ == "__main__":
         if debug_mode:
             start_receiver(receiver_queue)
         while True:
+            health_check()
             logger.info("Beginning producer cycle...")
             threads = []
 
