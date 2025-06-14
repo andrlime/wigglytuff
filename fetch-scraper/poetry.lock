@@ -716,6 +716,24 @@ spelling = ["pyenchant (>=3.2,<4.0)"]
 testutils = ["gitpython (>3)"]
 
 [[package]]
+name = "pyrefly"
+version = "0.19.1"
+description = "A faster Python type checker written in Rust"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pyrefly-0.19.1-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:eeb6dfd31ed984bdd104a4b012e1b077a837401b58e0a5be53e6fd6cce78124f"},
+    {file = "pyrefly-0.19.1-py3-none-macosx_11_0_arm64.whl", hash = "sha256:e414f4f73cf4bd8bdee87f7c845a675cf7f1222f9e2bb74026535b6abc89142f"},
+    {file = "pyrefly-0.19.1-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b6ad07fc55153345132e71a2d7f01588d42ca6fba33059d1a2e5a02321cf593b"},
+    {file = "pyrefly-0.19.1-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:354ab432a8168cd4bd0c561e1f3e21b24c849079e781994185d24cfec44f0c11"},
+    {file = "pyrefly-0.19.1-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a0df5c322e5fc95117ff984ecad427a439a9fc18b2cf2d7523fbfe1542d3d98b"},
+    {file = "pyrefly-0.19.1-py3-none-win32.whl", hash = "sha256:c426d487c54eed5ceef09b70e0109dbf0a7df2e44a1395c49059b92615af8f49"},
+    {file = "pyrefly-0.19.1-py3-none-win_amd64.whl", hash = "sha256:8d8a2e6a99f6d713369e9c06037dd1ce04176ec6403bff6341f0ca579cf09dfc"},
+    {file = "pyrefly-0.19.1-py3-none-win_arm64.whl", hash = "sha256:19c11cfa2a0732e6db0b50c304c48afd5afa818d3340f6468da4916eca27b35a"},
+    {file = "pyrefly-0.19.1.tar.gz", hash = "sha256:191edf4e5091363a760337d4c3aa00c7333a6674362ad56ab2471b7d4f21cfc8"},
+]
+
+[[package]]
 name = "python-dotenv"
 version = "1.1.0"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -793,18 +811,18 @@ files = [
 
 [[package]]
 name = "requests"
-version = "2.32.3"
+version = "2.32.4"
 description = "Python HTTP for Humans."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "requests-2.32.3-py3-none-any.whl", hash = "sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6"},
-    {file = "requests-2.32.3.tar.gz", hash = "sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760"},
+    {file = "requests-2.32.4-py3-none-any.whl", hash = "sha256:27babd3cda2a6d50b30443204ee89830707d396671944c998b5975b031ac2b2c"},
+    {file = "requests-2.32.4.tar.gz", hash = "sha256:27d0316682c8a29834d3264820024b62a36942083d52caf2f14c0591336d3422"},
 ]
 
 [package.dependencies]
 certifi = ">=2017.4.17"
-charset-normalizer = ">=2,<4"
+charset_normalizer = ">=2,<4"
 idna = ">=2.5,<4"
 urllib3 = ">=1.21.1,<3"
 
@@ -946,6 +964,31 @@ files = [
 ]
 
 [[package]]
+name = "types-pika"
+version = "1.2.0b1"
+description = "PEP-484 stubs for Pika"
+optional = false
+python-versions = "*"
+files = [
+    {file = "types-pika-1.2.0b1.tar.gz", hash = "sha256:338f56ced7cfe17bce5237764fb5561fb209be2ef7eb32712f58608f55b1dc5b"},
+    {file = "types_pika-1.2.0b1-py3-none-any.whl", hash = "sha256:d5522f5b17dbaf747e1a0e49dd0024c1656a5ffda890996daa40b43f824667bc"},
+]
+
+[package.extras]
+dev = ["flake8 (>=4.0.0,<4.1.0)", "flake8-pyi", "mypy (>=0.920)", "pika (==1.2.0)", "pyright", "tornado", "twisted"]
+
+[[package]]
+name = "types-pyyaml"
+version = "6.0.12.20250516"
+description = "Typing stubs for PyYAML"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "types_pyyaml-6.0.12.20250516-py3-none-any.whl", hash = "sha256:8478208feaeb53a34cb5d970c56a7cd76b72659442e733e268a94dc72b2d0530"},
+    {file = "types_pyyaml-6.0.12.20250516.tar.gz", hash = "sha256:9f21a70216fc0fa1b216a8176db5f9e0af6eb35d2f2932acb87689d03a5bf6ba"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.14.0"
 description = "Backported and Experimental Type Hints for Python 3.9+"
@@ -987,4 +1030,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "1a12580f5abde443c6c56f8e3f3ee4e789e6e37bd0f4aad82b0be322c7318c1d"
+content-hash = "45f508bb91ab4bc34451995d2b8b0e7e461b46a93655f2fe085021d290468336"

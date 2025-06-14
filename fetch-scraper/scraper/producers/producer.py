@@ -30,7 +30,7 @@ class Producer(ABC, Generic[T]):
         pass
 
     @abstractmethod
-    def get_id(self, item) -> str:
+    def get_id(self, item: T) -> str:
         """
         Returns a unique ID for a given item.
 

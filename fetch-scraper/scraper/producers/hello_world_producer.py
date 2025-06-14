@@ -14,7 +14,7 @@ class HelloWorldProducer(Producer[str]):
     Produces the same string every time
     """
 
-    def __init__(self, msg: str) -> "HelloWorldProducer":
+    def __init__(self, msg: str) -> None:
         self.message = msg
         self.unique_id = str(uuid.uuid4())
 
@@ -24,5 +24,5 @@ class HelloWorldProducer(Producer[str]):
     def serialise(self, target: str) -> bytes:
         return target.encode("utf-8")
 
-    def get_id(self, _: str) -> str:
+    def get_id(self, item: str) -> str:
         return self.unique_id

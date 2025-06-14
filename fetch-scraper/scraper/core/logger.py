@@ -6,7 +6,9 @@ import logging
 import sys
 
 
-def create_logger(name: str = __name__, level: int = logging.INFO) -> None:
+def create_logger(
+    name: str = __name__, level: int = logging.INFO
+) -> logging.Logger:
     logger = logging.getLogger(name)
 
     if not logger.handlers:

@@ -18,6 +18,16 @@ lxml = "^5.4.0"
 playwright = "^1.52.0"
 dotenv = "^0.9.9"
 pyyaml = "^6.0.2"
+pyrefly = "^0.19.1"
+types-pyyaml = "^6.0.12.20250516"
+types-pika = "^1.2.0b1"
+
+[tool.ruff]
+line-length = 80  # Match Black's default
+
+[tool.pyrefly]
+project-includes = ["**/*"]
+project-excludes = ["**/*venv/**/*"]
 
 
 [tool.poetry.group.dev.dependencies]

@@ -14,7 +14,7 @@ logger = create_logger()
 
 
 def health_check():
-    with open("/tmp/healthy", "w") as f:
+    with open("/tmp/healthy", "w", encoding="utf-8") as f:
         f.write(str(time.time()))
 
 

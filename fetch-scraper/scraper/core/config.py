@@ -10,7 +10,11 @@ from dotenv import load_dotenv
 
 from scraper.core.yml_reader import read_yaml_file
 from scraper.core.cli import AppCLI
-from scraper.core.exceptions import ConfigValueError, CLIValueError, EnvironmentValueError
+from scraper.core.exceptions import (
+    ConfigValueError,
+    CLIValueError,
+    EnvironmentValueError,
+)
 
 
 class AppConfig(object):
@@ -35,7 +39,9 @@ class AppConfig(object):
         yml_config = read_yaml_file(config_file)
         rabbitmq_config = yml_config.get("rabbitmq")
         if rabbitmq_config is None:
-            raise ConfigValueError(f"Expected non-empty RabbitMQ config in {config_file}, got None")
+            raise ConfigValueError(
+                f"Expected non-empty RabbitMQ config in {config_file}, got None"
+            )
 
         self.config = {
             "config": yml_config,

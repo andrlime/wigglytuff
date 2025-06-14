@@ -17,7 +17,7 @@ class SampleJobProducer(JobProducer):
     Generates and produces fake job listings
     """
 
-    def __init__(self, company_name: str, source_id: str) -> "SampleJobProducer":
+    def __init__(self, company_name: str, source_id: str) -> None:
         self.company_name = company_name
         self.source_id = source_id
 
