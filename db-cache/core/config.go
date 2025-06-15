@@ -11,20 +11,20 @@ import (
 
 type AppConfig struct {
 	RabbitMqCredentials struct {
-		Username	string	`env:"RABBITMQ_USERNAME"`
-		Password	string	`env:"RABBITMQ_PASSWORD"`
+		Username string `env:"RABBITMQ_USERNAME"`
+		Password string `env:"RABBITMQ_PASSWORD"`
 	}
 
 	RabbitMqConfig struct {
-		RabbitMqQueueName	string	`yaml:"queue_name"`
-		RabbitMqHostname	string	`yaml:"hostname"`
-		RabbitMqPort		int		`yaml:"port"`
-	}	`yaml:"rabbitmq"`
+		QueueName string `yaml:"queue_name"`
+		HostName  string `yaml:"hostname"`
+		Port      uint16 `yaml:"port"`
+	} `yaml:"rabbitmq"`
 }
 
 var (
-    appConfig  *AppConfig
-    appCfgOnce sync.Once
+	appConfig  *AppConfig
+	appCfgOnce sync.Once
 )
 
 // Note that this does NOT load from .env. It loads from environment variables
@@ -46,11 +46,12 @@ func (cfg *AppConfig) ParseYamlConfig(configFile string) {
 	}
 }
 
-func ParseConfig(configFile string) *AppConfig {
+func ParseConfig() *AppConfig {
+	cli := ParseAppCli()
 	appCfgOnce.Do(func() {
 		appConfig = &AppConfig{}
 		appConfig.ParseAppEnv()
-		appConfig.ParseYamlConfig(configFile)
+		appConfig.ParseYamlConfig(cli.ConfigFile)
 	})
 	return appConfig
 }

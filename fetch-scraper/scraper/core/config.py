@@ -55,8 +55,8 @@ class AppConfig(object):
             config = self.config.get("rabbitmq")
             if config is None:
                 raise ConfigValueError("RabbitMQ environment doesn't exist")
-            value_of_key = config.get(key, False)
-            if not value_of_key:
+            value_of_key = config.get(key, None)
+            if value_of_key is None:
                 raise ConfigValueError(f"Key {key} missing in RabbitMQ config")
             return config.get(key)
         except ValueError as e:
@@ -67,8 +67,8 @@ class AppConfig(object):
             config = self.config.get("config")
             if config is None:
                 raise ConfigValueError("Config environment doesn't exist")
-            value_of_key = config.get(key, False)
-            if not value_of_key:
+            value_of_key = config.get(key, None)
+            if value_of_key is None:
                 raise ConfigValueError(f"Key {key} missing in config")
             return config.get(key)
         except ValueError as e:

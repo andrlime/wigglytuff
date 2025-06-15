@@ -27,7 +27,7 @@ class RabbitQueue:
                 AppConfig().get_environment_variable("RABBITMQ_PASSWORD"),
             )
             logger.info(
-                "Attempting to connect to rabbitmq://%s:%s", hostname, port
+                "Attempting to connect to amqp://****:****@%s:%s", hostname, port
             )
             self.connection = pika.BlockingConnection(
                 pika.ConnectionParameters(

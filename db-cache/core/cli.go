@@ -6,14 +6,13 @@ import (
 )
 
 type CliConfig struct {
-	ConfigFile	string
+	ConfigFile string
 }
 
 var (
-    cliConfig  *CliConfig
-    cliOnce sync.Once
+	cliConfig *CliConfig
+	cliOnce   sync.Once
 )
-
 
 func ParseAppCli() *CliConfig {
 	cliOnce.Do(func() {

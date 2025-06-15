@@ -41,7 +41,6 @@ if __name__ == "__main__":
         if debug_mode:
             start_receiver(receiver_queue)
         while True:
-            health_check()
             logger.info("Beginning producer cycle...")
             threads = []
 
@@ -55,6 +54,7 @@ if __name__ == "__main__":
                 )
                 t.start()
                 threads.append(t)
+                health_check()
 
             for t in threads:
                 t.join()
