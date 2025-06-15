@@ -1,5 +1,11 @@
+# pylint: disable-all
+# pylint: disable-all
+# pylint: disable-all
+# pylint: disable-all
 """
 Job struct for JobProducer
+
+Non-RPC struct
 """
 
 from dataclasses import dataclass

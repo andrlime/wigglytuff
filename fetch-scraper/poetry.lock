@@ -978,6 +978,17 @@ files = [
 dev = ["flake8 (>=4.0.0,<4.1.0)", "flake8-pyi", "mypy (>=0.920)", "pika (==1.2.0)", "pyright", "tornado", "twisted"]
 
 [[package]]
+name = "types-protobuf"
+version = "6.30.2.20250516"
+description = "Typing stubs for protobuf"
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "types_protobuf-6.30.2.20250516-py3-none-any.whl", hash = "sha256:8c226d05b5e8b2623111765fa32d6e648bbc24832b4c2fddf0fa340ba5d5b722"},
+    {file = "types_protobuf-6.30.2.20250516.tar.gz", hash = "sha256:aecd1881770a9bb225ede66872ef7f0da4505edd0b193108edd9892e48d49a41"},
+]
+
+[[package]]
 name = "types-pyyaml"
 version = "6.0.12.20250516"
 description = "Typing stubs for PyYAML"
@@ -1030,4 +1041,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "45f508bb91ab4bc34451995d2b8b0e7e461b46a93655f2fe085021d290468336"
+content-hash = "e7cc66415a60506ef50e4e5fa7d333ad54ac8943f71123cca12eb6bb97e2c18f"

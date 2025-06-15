@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package job;
+
+option go_package = "./protobuf";
+
+// A single job item, containing all of its metadata
+message JobItem {
+  string uuid = 1;
+  string title = 2;
+  string company = 3;
+  string url = 4;
+  string source_id = 5;
+  string location = 6;
+  string date_posted = 7;
+}
+
+// List of JobItems
+message JobItemList {
+  repeated JobItem jobs = 1;
+}
+
+// Whether there exist duplicates in the query JobItemList
+message CheckSeenResponse {
+  bool seen = 1;
+}
+
+// Ack for notifier layer to acknowledge receiving the new job list
+message Ack {
+  bool success = 1;
+}
+
+// Called by producer layer to deduplicate job results
+service DeduplicationService {
+  rpc CheckSeen(JobItem) returns (CheckSeenResponse);
+}
+
+// Called by cache layer to send new jobs to notifier layer
+service JobPushService {
+  rpc SendJobs(JobItemList) returns (Ack);
+}

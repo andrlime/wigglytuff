@@ -1,0 +1,17 @@
+version: '3'
+tasks:
+  init:
+    cmds:
+      - ./compile_protobuf.sh
+    aliases:
+      - i
+  start:
+    cmds:
+      - docker compose up
+    aliases:
+      - s
+  dev:
+    cmds:
+      - docker compose up --watch --build
+    aliases:
+      - d
