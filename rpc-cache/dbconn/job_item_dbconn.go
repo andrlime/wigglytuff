@@ -8,7 +8,7 @@ import (
 	_ "github.com/lib/pq"
 
 	"cache/core"
-	"cache/models"
+	"cache/protobuf"
 	"cache/util"
 )
 
@@ -66,22 +66,22 @@ func (dbConn *JobItemDatabaseConnection) Close() {
 	dbConn.Conn.Close()
 }
 
-func (dbConn *JobItemDatabaseConnection) GetJobByUuid(uuid string) ([]models.JobItem, error) {
+func (dbConn *JobItemDatabaseConnection) GetJobByUuid(uuid string) ([]protobuf.JobItem, error) {
 	rows, err := dbConn.Conn.Query("SELECT * FROM jobs WHERE jobs.id = $1;", uuid)
 	if err != nil {
 		return nil, util.WrapError("Db:GetJobByUuid", err)
 	}
 	defer rows.Close()
 
-	var results []models.JobItem
+	var results []protobuf.JobItem
 
 	for rows.Next() {
-		var job models.JobItem
+		var job protobuf.JobItem
 		if err := rows.Scan(
 			&job.Uuid,
 			&job.Title,
 			&job.Company,
-			&job.URL,
+			&job.Url,
 			&job.SourceId,
 			&job.Location,
 			&job.DatePosted,
@@ -100,11 +100,11 @@ func (dbConn *JobItemDatabaseConnection) GetJobByUuid(uuid string) ([]models.Job
 	return results, nil
 }
 
-func (dbConn *JobItemDatabaseConnection) InsertNewJob(job *models.JobItem) error {
+func (dbConn *JobItemDatabaseConnection) InsertNewJob(job *protobuf.JobItem) error {
 	_, err := dbConn.Conn.Exec(`
 INSERT INTO jobs (id, title, company, url, source_id, location, date_posted)
 VALUES ($1, $2, $3, $4, $5, $6, $7)
-	`, job.Uuid, job.Title, job.Company, job.URL, job.SourceId, job.Location, job.DatePosted)
+	`, job.Uuid, job.Title, job.Company, job.Url, job.SourceId, job.Location, job.DatePosted)
 	if err != nil {
 		return util.WrapError("Db:InsertNewJob", err)
 	}

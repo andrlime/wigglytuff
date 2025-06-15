@@ -7,7 +7,7 @@ Provided as an example. Useless in production.
 import uuid
 import random
 
-from scraper.models.job import JobItem
+from scraper.models.job_pb2 import JobItem
 
 from .job_producer import JobProducer
 

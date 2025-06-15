@@ -14,6 +14,7 @@ from scraper.core.exceptions import (
     ConfigValueError,
     CLIValueError,
     EnvironmentValueError,
+    ProtobufError,
 )
 
 
@@ -31,6 +32,12 @@ class AppConfig(object):
     def __init__(self) -> None:
         if hasattr(self, "config"):
             return
+
+        # Check that protobuf files have been compiled
+        try:
+            from scraper.models.job_pb2 import JobItem
+        except ModuleNotFoundError as e:
+            raise ProtobufError("protoc generated stubs not found. Did you compile with ./compile_protobuf.sh?") from e
 
         cli_instance = AppCLI()
         load_dotenv()

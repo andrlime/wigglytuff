@@ -1,11 +1,12 @@
 package receiver
 
 import (
-	"encoding/json"
 	"log"
 
+	"google.golang.org/protobuf/proto"
+
 	"cache/dbconn"
-	"cache/models"
+	"cache/protobuf"
 )
 
 type JobItemReceiver struct {
@@ -13,8 +14,8 @@ type JobItemReceiver struct {
 }
 
 func (receiver JobItemReceiver) OnReceive(msg []byte) error {
-	newJobItem := models.JobItem{}
-	if err := json.Unmarshal(msg, &newJobItem); err != nil {
+	newJobItem := protobuf.JobItem{}
+	if err := proto.Unmarshal(msg, &newJobItem); err != nil {
 		return err
 	}
 

@@ -20,20 +20,23 @@ def health_check():
 
 def producer_thread_worker(producer: Producer, queue: RabbitQueue):
     data = producer.consume()
-    logger.info("[-] Produced data %s", data)
+    for item in data:
+        logger.info("[-] Produced data %s", str(producer.serialise(item)))
     for item in data:
         queue.send_message(producer.serialise(item))
 
 
 if __name__ == "__main__":
+    config = AppConfig()
+
     logger.info("Waiting 5 seconds for RabbitMQ to start...")
     time.sleep(5)
 
-    delay_interval = AppConfig().get_config_variable("interval")
-    queue_name = AppConfig().get_rmq_variable("queue_name")
+    delay_interval = config.get_config_variable("interval")
+    queue_name = config.get_rmq_variable("queue_name")
     producer_queues = [RabbitQueue(queue_name) for _ in producers]
 
-    debug_mode = AppConfig().get_rmq_variable("debug_mode")
+    debug_mode = config.get_rmq_variable("debug_mode")
     if debug_mode:
         receiver_queue = RabbitQueue(queue_name)
 
