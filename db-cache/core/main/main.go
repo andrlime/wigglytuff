@@ -17,6 +17,7 @@ func RabbitMqWorker(config *core.AppConfig) error {
 
 	log.Println("Starting RabbitMqWorker")
 	queue := queue.RabbitQueueFactory(config)
+	defer queue.Close()
 
 	log.Println("Starting message listener")
 	err := queue.Receive(receiver.JobItemReceiver{})

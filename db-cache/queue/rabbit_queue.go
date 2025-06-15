@@ -83,13 +83,12 @@ func (queue *RabbitQueue) Receive(receiver receiver.Receiver) error {
 	errChan := make(chan error)
 	go func() {
 		for d := range msgs {
-			log.Printf("[+] Received a message: %s", d.Body)
 			if err := receiver.OnReceive(d.Body); err != nil {
 				errChan <- err
 			}
 		}
 	}()
-	receiverErr := <-errChan
+	receiverErr := <-errChan // Blocks until error
 	return receiverErr
 }
 

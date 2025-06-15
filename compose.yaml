@@ -1,7 +1,6 @@
 services:
   rabbitmq:
     image: rabbitmq:4-management
-    container_name: rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
@@ -9,7 +8,19 @@ services:
       - "15672:15672"
     expose:
       - "5672"
-    restart: unless-stopped
+    restart: always
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./postgres:/docker-entrypoint-initdb.d
+    restart: always
   db-cache:
     image: andrewli2048/cache
     build:
@@ -28,11 +39,6 @@ services:
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
     stop_signal: SIGTERM
     restart: always
-    # healthcheck:
-    #   test: ["CMD", "bash", "-c", "find /tmp/healthy -mmin -1"]
-    #   interval: 30s
-    #   timeout: 3s
-    #   retries: 2
   fetch-scraper:
     image: andrewli2048/scraper
     build:
@@ -73,3 +79,5 @@ services:
   #     - "9000:9000"
   #   stop_signal: SIGTERM
   #   restart: always
+volumes:
+  db:

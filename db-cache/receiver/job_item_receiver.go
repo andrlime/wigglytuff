@@ -15,7 +15,7 @@ func (JobItemReceiver) OnReceive(msg []byte) error {
 		return err
 	}
 
-	log.Printf("got job uuid %v\n", newJobItem.Uuid)
+	log.Printf("[+] Received uuid %v\n", newJobItem.Uuid)
 
 	return nil
 }
