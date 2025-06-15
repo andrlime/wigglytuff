@@ -15,11 +15,23 @@ type AppConfig struct {
 		Password string `env:"RABBITMQ_PASSWORD"`
 	}
 
+	PostgresCredentials struct {
+		Username string `env:"POSTGRES_USER"`
+		Password string `env:"POSTGRES_PASSWORD"`
+	}
+
 	RabbitMqConfig struct {
 		QueueName string `yaml:"queue_name"`
 		HostName  string `yaml:"hostname"`
 		Port      uint16 `yaml:"port"`
 	} `yaml:"rabbitmq"`
+
+	PostgresConfig struct {
+		DatabaseName string `env:"POSTGRES_DB"`
+		HostName     string `yaml:"hostname"`
+		Port         uint16 `yaml:"port"`
+		SslMode      string `yaml:"ssl_mode"`
+	} `yaml:"postgres"`
 }
 
 var (

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"cache/core"
+	"cache/dbconn"
 	"cache/queue"
 	"cache/receiver"
 	"cache/util"
@@ -19,8 +20,18 @@ func RabbitMqWorker(config *core.AppConfig) error {
 	queue := queue.RabbitQueueFactory(config)
 	defer queue.Close()
 
+	log.Println("Creating new DbConn pool")
+	dbconn := dbconn.JobItemDbConnFactory(core.ParseConfig())
+	connectErr := dbconn.Connect()
+	if connectErr != nil {
+		return util.WrapError("RabbitMqWorker, failed to create db", connectErr)
+	}
+	defer dbconn.Close()
+
 	log.Println("Starting message listener")
-	err := queue.Receive(receiver.JobItemReceiver{})
+	err := queue.Receive(receiver.JobItemReceiver{
+		DbConnection: dbconn,
+	})
 	return err
 }
 

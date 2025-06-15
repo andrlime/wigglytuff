@@ -5,3 +5,7 @@ rabbitmq:
   port: 5672
   queue_name: job-message-queue
   debug_mode: false
+postgres:
+  hostname: postgres
+  port: 5432
+  ssl_mode: disable
