@@ -19,9 +19,8 @@ func RabbitMqWorker(config *core.AppConfig) error {
 	queue := queue.RabbitQueueFactory(config)
 
 	log.Println("Starting message listener")
-	queue.Receive(receiver.JobItemReceiver{})
-
-	return util.CreateError("RabbitMqWorker", "not implemented")
+	err := queue.Receive(receiver.JobItemReceiver{})
+	return err
 }
 
 func RpcServerWorker(config *core.AppConfig) error {
