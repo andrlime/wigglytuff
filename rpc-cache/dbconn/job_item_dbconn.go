@@ -2,7 +2,6 @@ package dbconn
 
 import (
 	"fmt"
-	"log"
 
 	"database/sql"
 	_ "github.com/lib/pq"
@@ -94,8 +93,6 @@ func (dbConn *JobItemDatabaseConnection) GetJobByUuid(uuid string) ([]protobuf.J
 	if err := rows.Err(); err != nil {
 		return nil, util.WrapError("Db:GetJobByUuid", err)
 	}
-
-	log.Printf("%v\n", results)
 
 	return results, nil
 }

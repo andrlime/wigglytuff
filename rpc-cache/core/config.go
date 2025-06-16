@@ -32,6 +32,10 @@ type AppConfig struct {
 		Port         uint16 `yaml:"port"`
 		SslMode      string `yaml:"ssl_mode"`
 	} `yaml:"postgres"`
+	
+	RpcConfig struct {
+		Port         uint16 `yaml:"port"`
+	} `yaml:"rpc"`
 }
 
 var (

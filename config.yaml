@@ -1,5 +1,5 @@
 # config.yaml is sym-linked across all children directories
-interval: 3
+interval: 30
 rabbitmq:
   hostname: rabbitmq
   port: 5672
@@ -9,3 +9,6 @@ postgres:
   hostname: postgres
   port: 5432
   ssl_mode: disable
+rpc:
+  hostname: rpc-cache
+  port: 50051

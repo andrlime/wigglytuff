@@ -15,5 +15,5 @@ poetry run \
     -I./protobuf \
     --python_out=./fetch-scraper/scraper/models \
     --pyi_out=./fetch-scraper/scraper/models \
-    --grpc_python_out=./fetch-scraper/scraper/rpc \
+    --grpc_python_out=./fetch-scraper/scraper/models \
     ./protobuf/job.proto

@@ -22,7 +22,12 @@ message JobItemList {
 
 // Whether there exist duplicates in the query JobItemList
 message CheckSeenResponse {
-  bool seen = 1;
+  string uuid = 1;
+  bool seen = 2;
+}
+
+message CheckSeenListResponse {
+  repeated CheckSeenResponse results = 1;
 }
 
 // Ack for notifier layer to acknowledge receiving the new job list
@@ -33,6 +38,7 @@ message Ack {
 // Called by producer layer to deduplicate job results
 service DeduplicationService {
   rpc CheckSeen(JobItem) returns (CheckSeenResponse);
+  rpc CheckSeenBatch(JobItemList) returns (CheckSeenListResponse);
 }
 
 // Called by cache layer to send new jobs to notifier layer

@@ -9,19 +9,17 @@ import (
 	"cache/dbconn"
 	"cache/queue"
 	"cache/receiver"
+	"cache/rpc"
 	"cache/util"
 )
 
 func RabbitMqWorker(config *core.AppConfig) error {
-	log.Println("Sleeping 5 seconds until RabbitMQ starts...")
-	time.Sleep(5 * time.Second)
-
 	log.Println("Starting RabbitMqWorker")
 	queue := queue.RabbitQueueFactory(config)
 	defer queue.Close()
 
 	log.Println("Creating new DbConn pool")
-	dbconn := dbconn.JobItemDbConnFactory(core.ParseConfig())
+	dbconn := dbconn.JobItemDbConnFactory(config)
 	connectErr := dbconn.Connect()
 	if connectErr != nil {
 		return util.WrapError("RabbitMqWorker, failed to create db", connectErr)
@@ -38,14 +36,17 @@ func RabbitMqWorker(config *core.AppConfig) error {
 func RpcServerWorker(config *core.AppConfig) error {
 	log.Println("Starting RpcServerWorker")
 
-	select {}
+	err := rpc.StartRpcServer(config)
 
-	return util.CreateError("RpcServerWorker", "not implemented")
+	return err
 }
 
 func main() {
 	config := core.ParseConfig()
 	log.Printf("Finished reading AppConfig %v\n", config)
+
+	log.Println("Sleeping 3 seconds until RabbitMQ and Postgres start...")
+	time.Sleep(5 * time.Second)
 
 	errChan := make(chan error, 2)
 	go func() {

@@ -3,6 +3,7 @@ App config singleton class
 """
 
 import os
+import importlib.util
 
 from typing import Any
 
@@ -34,10 +35,11 @@ class AppConfig(object):
             return
 
         # Check that protobuf files have been compiled
-        try:
-            from scraper.models.job_pb2 import JobItem
-        except ModuleNotFoundError as e:
-            raise ProtobufError("protoc generated stubs not found. Did you compile with ./compile_protobuf.sh?") from e
+        protobuf_exists = importlib.util.find_spec("scraper.models.job_pb2")
+        if not protobuf_exists:
+            raise ProtobufError(
+                "protoc generated stubs not found. Did you compile with ./compile_protobuf.sh?"
+            )
 
         cli_instance = AppCLI()
         load_dotenv()
@@ -49,10 +51,16 @@ class AppConfig(object):
             raise ConfigValueError(
                 f"Expected non-empty RabbitMQ config in {config_file}, got None"
             )
+        grpc_config = yml_config.get("rpc")
+        if grpc_config is None:
+            raise ConfigValueError(
+                f"Expected non-empty gRPC config in {config_file}, got None"
+            )
 
         self.config = {
             "config": yml_config,
             "rabbitmq": rabbitmq_config,
+            "rpc": grpc_config,
             "env": os.environ,
             "cli": cli_instance.get_parameters(),
         }
@@ -68,6 +76,18 @@ class AppConfig(object):
             return config.get(key)
         except ValueError as e:
             raise ConfigValueError("RabbitMQ config value not found") from e
+
+    def get_grpc_variable(self, key: str) -> Any:
+        try:
+            config = self.config.get("rpc")
+            if config is None:
+                raise ConfigValueError("gRPC environment doesn't exist")
+            value_of_key = config.get(key, None)
+            if value_of_key is None:
+                raise ConfigValueError(f"Key {key} missing in gRPC config")
+            return config.get(key)
+        except ValueError as e:
+            raise ConfigValueError("gRPC config value not found") from e
 
     def get_config_variable(self, key: str) -> Any:
         try:
