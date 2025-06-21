@@ -1,4 +1,4 @@
-# Job Board Producer, Discord Bot Consumer
+# Distributed Producer Consumer Pipeline via RabbitMQ, gRPC, Go, Python
 
 The purpose of this project is to have real-time notifications of new job postings using web scraping, but processed via a messaging pipeline to be more robust and independently scalable on both the producer side (so more scrapers, or API callers, etc.) and the consumer side (more bots, or webhooks, or some other API call). In general, this project can be used for any schema, but in this case is used to aggregate job board postings into a Discord server.
 
