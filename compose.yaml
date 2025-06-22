@@ -65,22 +65,20 @@ services:
       interval: 30s
       timeout: 3s
       retries: 2
-  # bot-notifier:
-  #   image: andrewli2048/notifier
-  #   build:
-  #     context: bot-notifier
-  #     dockerfile: docker/Dockerfile
-  #     target: ${BUILD_TARGET:-dev}
-  #   develop:
-  #     watch:
-  #       - action: sync
-  #         path: bot-notifier/notifier
-  #         target: /app/notifier
-  #       - action: rebuild
-  #         path: bot-notifier/pyproject.toml
-  #   ports:
-  #     - "9000:9000"
-  #   stop_signal: SIGTERM
-  #   restart: always
+  bot-notifier:
+    image: andrewli2048/notifier
+    build:
+      context: bot-notifier
+      dockerfile: docker/Dockerfile
+      target: ${BUILD_TARGET:-dev}
+    develop:
+      watch:
+        - action: sync
+          path: bot-notifier/notifier
+          target: /app/notifier
+        - action: rebuild
+          path: bot-notifier/pyproject.toml
+    stop_signal: SIGKILL
+    restart: always
 volumes:
   db:

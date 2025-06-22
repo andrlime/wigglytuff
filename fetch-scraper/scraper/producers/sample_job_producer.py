@@ -25,7 +25,7 @@ class SampleJobProducer(JobProducer):
         self.company_name = company_name
         self.source_id = source_id
 
-    def consume(self) -> list[JobItem]:
+    def produce(self) -> list[JobItem]:
         titles = ["Title 1", "Title 2", "Title 3", "Title 4"]
 
         def generate_fake_job():

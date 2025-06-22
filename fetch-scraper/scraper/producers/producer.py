@@ -16,9 +16,9 @@ class Producer(ABC, Generic[T]):
     """
 
     @abstractmethod
-    def consume(self) -> list[T]:
+    def produce(self) -> list[T]:
         """
-        Abstract method to consume data from some source and return some List[T]
+        Abstract method to produce data from some source and return some List[T]
         """
         pass
 

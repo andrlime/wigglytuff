@@ -1,9 +1,9 @@
 """
-Error class for when an environment value has an error
+Error class for when a env variable has an error
 """
 
-from .config_value_error import ConfigValueError
+from notifier.core.exceptions.value_error_wrapper import ValueErrorWrapper
 
 
-class EnvironmentValueError(ConfigValueError):
+class EnvironmentValueError(ValueErrorWrapper):
     pass

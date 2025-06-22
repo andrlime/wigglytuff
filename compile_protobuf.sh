@@ -17,3 +17,11 @@ poetry run \
     --pyi_out=./fetch-scraper/scraper/models \
     --grpc_python_out=./fetch-scraper/scraper/models \
     ./protobuf/job.proto
+
+sed "s/import job_pb2/import scraper.models.job_pb2/g" \
+    fetch-scraper/scraper/models/job_pb2_grpc.py > temp.py \
+    && mv temp.py fetch-scraper/scraper/models/job_pb2_grpc.py
+
+sed "s/import job_pb2/import notifier.models.job_pb2/g" \
+    bot-notifier/notifier/models/job_pb2_grpc.py > temp.py \
+    && mv temp.py bot-notifier/notifier/models/job_pb2_grpc.py

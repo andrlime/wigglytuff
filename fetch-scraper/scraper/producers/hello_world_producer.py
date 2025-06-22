@@ -18,7 +18,7 @@ class HelloWorldProducer(Producer[str]):
         self.message = msg
         self.unique_id = str(uuid.uuid4())
 
-    def consume(self) -> list[str]:
+    def produce(self) -> list[str]:
         return [self.message]
 
     def serialise(self, target: str) -> bytes:

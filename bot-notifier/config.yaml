@@ -1,2 +1,15 @@
-app:
-  app_port: 9000
+# config.yaml is sym-linked across all children directories
+interval: 6
+rabbitmq:
+  hostname: rabbitmq
+  port: 5672
+  queue_name: job-message-queue
+  debug_mode: false
+postgres:
+  hostname: postgres
+  port: 5432
+  ssl_mode: disable
+rpc:
+  hostname: rpc-cache
+  port: 50051
+  notifier-hostname: bot-notifier

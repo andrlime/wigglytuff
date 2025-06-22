@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
+
+	"google.golang.org/grpc"
 
 	"cache/core"
 	"cache/dbconn"
@@ -11,6 +14,7 @@ import (
 	"cache/receiver"
 	"cache/rpc"
 	"cache/util"
+	pb "cache/protobuf"
 )
 
 func RabbitMqWorker(config *core.AppConfig) error {
@@ -26,9 +30,25 @@ func RabbitMqWorker(config *core.AppConfig) error {
 	}
 	defer dbconn.Close()
 
+	log.Println("Creating NotifierRPC connection and client")
+	notifierRpcUrl := fmt.Sprintf(
+		"%v:%v",
+		config.RpcConfig.NotifierName,
+		config.RpcConfig.Port,
+	)
+	conn, dialErr := grpc.Dial(notifierRpcUrl, grpc.WithInsecure())
+	if dialErr != nil {
+		return util.WrapError("Dial NotifierRPC", dialErr)
+	}
+	defer conn.Close()
+
+	client := pb.NewJobPushServiceClient(conn)
+
 	log.Println("Starting message listener")
 	err := queue.Receive(receiver.JobItemReceiver{
 		DbConnection: dbconn,
+		NotifierRpcConnection: conn,
+		NotifierRpcClient: client,
 	})
 	return err
 }

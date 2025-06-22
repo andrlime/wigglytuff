@@ -35,6 +35,7 @@ type AppConfig struct {
 	
 	RpcConfig struct {
 		Port         uint16 `yaml:"port"`
+		NotifierName string	`yaml:"notifier-hostname"`
 	} `yaml:"rpc"`
 }
 

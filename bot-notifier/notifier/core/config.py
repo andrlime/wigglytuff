@@ -1,14 +1,22 @@
 """
-Helper functions to configure Flask app settings
+App config singleton class
 """
 
 import os
+import importlib.util
+
 from typing import Any
 
 from dotenv import load_dotenv
-from yaml import Loader, load
 
-from notifier.core.exceptions import ConfigValueError, EnvironmentValueError
+from notifier.core.yml_reader import read_yaml_file
+from notifier.core.cli import AppCLI
+from notifier.core.exceptions import (
+    ConfigValueError,
+    CLIValueError,
+    EnvironmentValueError,
+    ProtobufError,
+)
 
 
 class AppConfig(object):
@@ -23,22 +31,84 @@ class AppConfig(object):
         return cls.instance
 
     def __init__(self) -> None:
-        if not hasattr(self, "config"):
-            load_dotenv()
+        if hasattr(self, "config"):
+            return
 
-            yml_config = self.read_yaml_config_file("config.yaml")
-            app_config = yml_config.get("app")
+        # Check that protobuf files have been compiled
+        protobuf_exists = importlib.util.find_spec("notifier.models.job_pb2")
+        if not protobuf_exists:
+            raise ProtobufError(
+                "protoc generated stubs not found. Did you compile with ./compile_protobuf.sh?"
+            )
 
-            self.config = {
-                "app_port": self.get_key(app_config, "app_port", "config.yml"),
-                "env": os.environ,
-            }
+        cli_instance = AppCLI()
+        load_dotenv()
 
-    def get_key(self, obj: dict, key: str, place: str) -> Any:
+        config_file = cli_instance.get_parameter_by_key("config")
+        yml_config = read_yaml_file(config_file)
+        rabbitmq_config = yml_config.get("rabbitmq")
+        if rabbitmq_config is None:
+            raise ConfigValueError(
+                f"Expected non-empty RabbitMQ config in {config_file}, got None"
+            )
+        grpc_config = yml_config.get("rpc")
+        if grpc_config is None:
+            raise ConfigValueError(
+                f"Expected non-empty gRPC config in {config_file}, got None"
+            )
+
+        self.config = {
+            "config": yml_config,
+            "rabbitmq": rabbitmq_config,
+            "rpc": grpc_config,
+            "env": os.environ,
+            "cli": cli_instance.get_parameters(),
+        }
+
+    def get_rmq_variable(self, key: str) -> Any:
         try:
-            return obj.get(key)
+            config = self.config.get("rabbitmq")
+            if config is None:
+                raise ConfigValueError("RabbitMQ environment doesn't exist")
+            value_of_key = config.get(key, None)
+            if value_of_key is None:
+                raise ConfigValueError(f"Key {key} missing in RabbitMQ config")
+            return config.get(key)
         except ValueError as e:
-            raise ConfigValueError(f"{key} not set in {place}") from e
+            raise ConfigValueError("RabbitMQ config value not found") from e
+
+    def get_grpc_variable(self, key: str) -> Any:
+        try:
+            config = self.config.get("rpc")
+            if config is None:
+                raise ConfigValueError("gRPC environment doesn't exist")
+            value_of_key = config.get(key, None)
+            if value_of_key is None:
+                raise ConfigValueError(f"Key {key} missing in gRPC config")
+            return config.get(key)
+        except ValueError as e:
+            raise ConfigValueError("gRPC config value not found") from e
+
+    def get_config_variable(self, key: str) -> Any:
+        try:
+            config = self.config.get("config")
+            if config is None:
+                raise ConfigValueError("Config environment doesn't exist")
+            value_of_key = config.get(key, None)
+            if value_of_key is None:
+                raise ConfigValueError(f"Key {key} missing in config")
+            return config.get(key)
+        except ValueError as e:
+            raise ConfigValueError("Config value not found") from e
+
+    def get_cli_argument(self, key: str) -> Any:
+        try:
+            cli_instance = self.config.get("cli")
+            if cli_instance is None:
+                raise CLIValueError("CLI environment doesn't exist")
+            return cli_instance.get(key, None)
+        except ValueError as e:
+            raise CLIValueError("CLI value not found") from e
 
     def get_environment_variable(self, key: str) -> Any:
         try:
@@ -52,13 +122,5 @@ class AppConfig(object):
         except ValueError as e:
             raise EnvironmentValueError("Environment variable not found") from e
 
-    def read_yaml_config_file(self, path: str) -> Any:
-        """
-        Read DB config from the config.yml file
-        """
-
-        stream = open(path, "r", encoding="utf-8")
-        content = load(stream, Loader)
-        stream.close()
-
-        return content
+    def __str__(self) -> str:
+        return str(self.config)

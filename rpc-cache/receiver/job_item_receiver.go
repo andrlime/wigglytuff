@@ -1,22 +1,28 @@
 package receiver
 
 import (
+	"context"
 	"log"
+	"time"
 
+	"google.golang.org/grpc"
 	"google.golang.org/protobuf/proto"
 
 	"cache/dbconn"
-	"cache/protobuf"
+	"cache/util"
+	pb "cache/protobuf"
 )
 
 type JobItemReceiver struct {
-	DbConnection *dbconn.JobItemDatabaseConnection
+	DbConnection 			*dbconn.JobItemDatabaseConnection
+	NotifierRpcConnection	*grpc.ClientConn
+	NotifierRpcClient		pb.JobPushServiceClient
 }
 
 func (receiver JobItemReceiver) OnReceive(msg []byte) error {
-	newJobItem := protobuf.JobItem{}
+	newJobItem := pb.JobItem{}
 	if err := proto.Unmarshal(msg, &newJobItem); err != nil {
-		return err
+		return util.WrapError("Unmarshal protobuf data", err)
 	}
 
 	log.Printf("[+] Received uuid %v\n", newJobItem.Uuid)
@@ -25,8 +31,17 @@ func (receiver JobItemReceiver) OnReceive(msg []byte) error {
 	receiver.DbConnection.InsertNewJob(&newJobItem)
 	log.Printf("[>] Successfully wrote job\n")
 
-	// log.Printf("[<] Sending %v via RPC to notifier receiver\n", newJobItem.Uuid)
-	// log.Printf("[>] Successfully sent via RPC\n")
+	log.Printf("[<] Sending %v via RPC to notifier receiver\n", newJobItem.Uuid)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+    defer cancel()
+
+	_, err := receiver.NotifierRpcClient.SendJobs(ctx, &pb.JobItemList{
+		Jobs: []*pb.JobItem{&newJobItem,},
+	})
+	if err != nil {
+		return util.WrapError("Send jobs via RPC to notifier", err)
+	}
+	log.Printf("[>] Successfully sent via RPC\n")
 
 	return nil
 }
