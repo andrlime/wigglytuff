@@ -3,8 +3,6 @@ A Consumer registry that avoids long imports in main.py
 """
 
 from .consumer import Consumer as Consumer
+from .discord_consumer import DiscordConsumer as DiscordConsumer
 
-consumers = [
-    # SampleJobConsumer("Big Finance Company", "some-quant-company"),
-    # SampleJobConsumer("Small Finance Company", "some-quant-company"),
-]
+consumers = [DiscordConsumer()]

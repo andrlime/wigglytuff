@@ -80,5 +80,7 @@ services:
           path: bot-notifier/pyproject.toml
     stop_signal: SIGKILL
     restart: always
+    environment:
+      DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
 volumes:
   db:

@@ -16,7 +16,7 @@ class Consumer(ABC, Generic[T]):
     """
 
     @abstractmethod
-    def consume(self, message: T) -> list[T]:
+    def consume(self, message: T):
         """
         Abstract method to consume data from some source and handle it somehow
         """

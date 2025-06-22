@@ -265,6 +265,23 @@ graph = ["objgraph (>=1.7.2)"]
 profile = ["gprof2dot (>=2022.7.29)"]
 
 [[package]]
+name = "discord-webhook"
+version = "1.4.1"
+description = "Easily send Discord webhooks with Python"
+optional = false
+python-versions = "<4.0,>=3.10"
+files = [
+    {file = "discord_webhook-1.4.1-py3-none-any.whl", hash = "sha256:1ed6a07d16ca0e6e6b1a91536c2fc34d0ba8251e5be37fe8850189aaf1155ee8"},
+    {file = "discord_webhook-1.4.1.tar.gz", hash = "sha256:2913c3ccb216e7d82911f96296f78b6b28b68a6f33a6fa5a61fc2da697b34a4d"},
+]
+
+[package.dependencies]
+requests = ">=2.32.3,<3.0.0"
+
+[package.extras]
+async = ["httpx (>=0.28.1,<0.29.0)"]
+
+[[package]]
 name = "dotenv"
 version = "0.9.9"
 description = "Deprecated package"
@@ -1122,4 +1139,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "1ceb9d4aa306c8bbaaf8f52fd013ddabd54d99c7f1e6270f7d171c06b480227a"
+content-hash = "1db7bbe0152c1d37c1e700954fd08e249d933e926737b12686f060712ddf8b33"

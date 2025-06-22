@@ -10,6 +10,7 @@ import threading
 
 from notifier.core.config import AppConfig
 from notifier.core.logger import create_logger
+from notifier.consumers import consumers
 from notifier.consumers.orchestrator import ConsumerOrchestrator
 from notifier.buffer.shared_queue import SharedQueue
 import notifier.servicers as servicers
@@ -27,12 +28,13 @@ if __name__ == "__main__":
         servicers.JobPushServiceServicer(buffer), server
     )
 
-    consumer_orchestrator = ConsumerOrchestrator([], buffer)
-    threading.Thread(target=consumer_orchestrator.worker).start()
-
     rpc_port = config.get_grpc_variable("port")
     logger.info("Starting RPC service on %s:%s", __name__, rpc_port)
-
     server.add_insecure_port(f"[::]:{rpc_port}")
     server.start()
+
+    consumer_orchestrator = ConsumerOrchestrator(consumers, buffer)
+    logger.info("Starting orchestration service...")
+    threading.Thread(target=consumer_orchestrator.worker).start()
+
     server.wait_for_termination()

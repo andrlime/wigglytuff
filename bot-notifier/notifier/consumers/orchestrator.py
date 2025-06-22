@@ -27,14 +27,13 @@ class ConsumerOrchestrator:
         while True:
             logger.info("Beginning consumer cycle...")
             contents = self.buffer.empty()
-            logger.info("Contents of buffer: %s", [job.uuid for job in contents])
+            logger.info(
+                "Contents of buffer: %s", [job.uuid for job in contents]
+            )
             threads = []
 
             for c in self.consumers:
-                t = threading.Thread(
-                    target=c.consume,
-                    args=(contents),
-                )
+                t = threading.Thread(target=c.consume, args=(contents,))
                 t.start()
                 threads.append(t)
 
