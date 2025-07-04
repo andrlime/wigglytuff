@@ -1,5 +1,5 @@
 # config.yaml is sym-linked across all children directories
-interval: 900
+interval: 300
 rabbitmq:
   hostname: rabbitmq
   port: 5672

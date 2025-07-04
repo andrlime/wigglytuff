@@ -58,8 +58,6 @@ class JaneStreetProducer(JobProducer):
                 url=href,
                 source_id=self.source_id
             ))
-        
-        print(new_job_list, len(new_job_list))
 
         logger.info(
             "[=] Produced new jobs %s", [job.uuid for job in new_job_list]
