@@ -18,21 +18,19 @@ class HaitouProducer(JobProducer):
     Generates and produces job listings from Haitou job aggregator
     """
 
-    def __init__(
-        self, source_id: str
-    ) -> None:
+    def __init__(self, source_id: str) -> None:
         super().__init__()
         self.source_id = source_id
         self.api_url = "https://haitou.zhitongguigu.com/api/search"
-    
+
     def parse_job(self, body: dict) -> JobItem:
         return JobItem(
-                    uuid=f"{body.get("id")}-{self.source_id}",
-                    title=body.get("title", "JOB TITLE NOT FOUND"),
-                    company=body.get("company", "JOB COMPANY NOT FOUND"),
-                    url=body.get("url", "JOB URL NOT FOUND"),
-                    source_id=self.source_id,
-                )
+            uuid=f"{body.get("id")}-{self.source_id}",
+            title=body.get("title", "JOB TITLE NOT FOUND"),
+            company=body.get("company", "JOB COMPANY NOT FOUND"),
+            url=body.get("url", "JOB URL NOT FOUND"),
+            source_id=self.source_id,
+        )
 
     def produce(self) -> list[JobItem]:
         country = ",".join(["美国"])
@@ -48,20 +46,18 @@ class HaitouProducer(JobProducer):
             "direction": direction,
             "duration": "",
             "education": "",
-            "exp": "intern",
+            "exp": exp,
             "inFavorite": "",
             "methodName": "",
             "pageIndex": pageIndex,
             "pageSize": pageSize,
             "remote": "",
             "sponsor": "",
-            "system": "US",
+            "system": system,
             "tag": "",
-            "timestamp": timestamp
+            "timestamp": timestamp,
         }
-        headers={
-            "Content-Type": "application/json"
-        }
+        headers = {"Content-Type": "application/json"}
 
         # Fail silently, we'll try again soon
         resp = requests.post(self.api_url, json=request_body, headers=headers)
@@ -71,7 +67,7 @@ class HaitouProducer(JobProducer):
         resp_job_list = resp_data.get("list", None)
         if resp_job_list is None:
             return
-        
+
         new_job_list = [self.parse_job(job) for job in resp_job_list]
 
         logger.info(

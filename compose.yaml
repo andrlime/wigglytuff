@@ -26,9 +26,11 @@ services:
       - db:/var/lib/postgresql/data
       - ./postgres:/docker-entrypoint-initdb.d
     restart: always
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   rpc-cache:
     image: andrewli2048/cache
     build:
@@ -52,6 +54,8 @@ services:
     restart: always
     depends_on:
       rabbitmq:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
   fetch-scraper:
     image: andrewli2048/scraper
@@ -79,6 +83,8 @@ services:
     depends_on:
       rabbitmq:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
   bot-notifier:
     image: andrewli2048/notifier
     build:
@@ -98,6 +104,8 @@ services:
       DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
     depends_on:
       rabbitmq:
+        condition: service_healthy
+      postgres:
         condition: service_healthy
 volumes:
   db:

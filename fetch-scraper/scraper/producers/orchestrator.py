@@ -23,8 +23,6 @@ class ProducerOrchestrator:
         self.delay_interval = AppConfig().get_config_variable("interval")
         self.queue_name = AppConfig().get_rmq_variable("queue_name")
 
-        self.producer_queues = [RabbitQueue(self.queue_name) for _ in producers]
-
         self.debug_mode = AppConfig().get_rmq_variable("debug_mode")
         if self.debug_mode:
             self.receiver_queue = RabbitQueue(self.queue_name)
@@ -46,8 +44,9 @@ class ProducerOrchestrator:
         while True:
             logger.info("Beginning producer cycle...")
             threads = []
+            queues = [RabbitQueue(self.queue_name) for _ in self.producers]
 
-            for producer_, queue_ in zip(self.producers, self.producer_queues):
+            for producer_, queue_ in zip(self.producers, queues):
                 t = threading.Thread(
                     target=self.thread_worker,
                     args=(
@@ -62,11 +61,12 @@ class ProducerOrchestrator:
             for t in threads:
                 t.join()
 
+            for q in queues:
+                q.close()
+
             logger.info("Now sleeping %s seconds", self.delay_interval)
             time.sleep(self.delay_interval)
 
     def close(self):
-        for queue_ in self.producer_queues:
-            queue_.close()
         if self.debug_mode:
             self.receiver_queue.close()
