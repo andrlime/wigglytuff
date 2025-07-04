@@ -9,6 +9,11 @@ services:
     expose:
       - "5672"
     restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
   postgres:
     image: postgres:17
     environment:
@@ -21,6 +26,9 @@ services:
       - db:/var/lib/postgresql/data
       - ./postgres:/docker-entrypoint-initdb.d
     restart: always
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   rpc-cache:
     image: andrewli2048/cache
     build:
@@ -42,6 +50,9 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     stop_signal: SIGTERM
     restart: always
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   fetch-scraper:
     image: andrewli2048/scraper
     build:
@@ -65,6 +76,9 @@ services:
       interval: 30s
       timeout: 3s
       retries: 2
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
   bot-notifier:
     image: andrewli2048/notifier
     build:
@@ -82,5 +96,8 @@ services:
     restart: always
     environment:
       DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 volumes:
   db:

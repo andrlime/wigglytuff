@@ -27,8 +27,8 @@ def producer_thread_worker(producer: Producer, queue: RabbitQueue):
 if __name__ == "__main__":
     config = AppConfig()
 
-    logger.info("Waiting 10 seconds for RPC and RabbitMQ to start...")
-    time.sleep(10)
+    logger.info("Waiting 5 seconds for RPC and RabbitMQ to start...")
+    time.sleep(5)
 
     delay_interval = config.get_config_variable("interval")
     queue_name = config.get_rmq_variable("queue_name")
