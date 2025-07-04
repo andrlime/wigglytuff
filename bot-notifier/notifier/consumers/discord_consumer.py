@@ -33,12 +33,28 @@ class DiscordConsumer(Consumer[list[JobItem]]):
         if len(message) == 0:
             return
 
+        chunks = []
         job_strings = [self.single_job_to_string(job) for job in message]
-        response = DiscordWebhook(
-            url=self.webhook_url, content="\n".join(job_strings)
-        ).execute()
+    
+        current_chunk = ""
+        for s in job_strings:
+            if len(current_chunk) + len(s) > 1900:
+                chunks.append(current_chunk)
+                current_chunk = s
+            else:
+                current_chunk += "\n" + s
 
-        if response.status_code != 200:
-            logger.error("FAILED to send to Discord webhook! %s", response)
-        else:
-            logger.info("Sent jobs to Discord webhook!")
+        if current_chunk:
+            chunks.append(current_chunk)
+        
+        for c in chunks:
+            if "jane-street" in c:
+                c = "<@274430419917733888>\n" + c
+            response = DiscordWebhook(
+                url=self.webhook_url, content=c
+            ).execute()
+
+            if response.status_code != 200:
+                logger.error("FAILED to send to Discord webhook! %s", response)
+            else:
+                logger.info("Sent batch of jobs to Discord webhook!")

@@ -36,8 +36,7 @@ func (s *server) CheckSeen(ctx context.Context, req *pb.JobItem) (*pb.CheckSeenR
 func (s *server) CheckSeenBatch(ctx context.Context, req *pb.JobItemList) (*pb.CheckSeenListResponse, error) {
 	results := make([]*pb.CheckSeenResponse, 0, len(req.Jobs))
 	for _, job := range req.Jobs {
-		log.Printf("[RPC] Checking job UUID: %s\n", job.Uuid)
-
+		log.Printf("Checking job UUID: %s\n", job.Uuid)
 		checkUuidResult, err := s.checkSingleUuid(job.Uuid)
 		if err != nil {
 			return nil, err
