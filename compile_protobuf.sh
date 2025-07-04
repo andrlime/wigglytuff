@@ -3,6 +3,13 @@
 
 protoc \
     --python_out=./fetch-scraper/scraper \
+    ./protobuf/job.proto
+
+protoc \
+    --python_out=./bot-notifier/notifier \
+    ./protobuf/job.proto
+
+protoc \
     --go_out=./rpc-cache \
     ./protobuf/job.proto
 
@@ -16,6 +23,14 @@ poetry run \
     --python_out=./fetch-scraper/scraper/models \
     --pyi_out=./fetch-scraper/scraper/models \
     --grpc_python_out=./fetch-scraper/scraper/models \
+    ./protobuf/job.proto
+
+poetry run \
+    python -m grpc_tools.protoc \
+    -I./protobuf \
+    --python_out=./bot-notifier/notifier/models \
+    --pyi_out=./bot-notifier/notifier/models \
+    --grpc_python_out=./bot-notifier/notifier/models \
     ./protobuf/job.proto
 
 sed "s/import job_pb2/import scraper.models.job_pb2/g" \
