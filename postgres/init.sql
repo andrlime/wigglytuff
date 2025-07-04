@@ -1,5 +1,5 @@
 CREATE TABLE jobs (
-    id UUID PRIMARY KEY,
+    id TEXT PRIMARY KEY,
     title TEXT NOT NULL,
     company TEXT NOT NULL,
     url TEXT NOT NULL,

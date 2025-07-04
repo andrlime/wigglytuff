@@ -57,5 +57,4 @@ class SampleJobProducer(JobProducer):
         for job in not_seen_jobs:
             logger.info("[+] New %s", job.uuid)
 
-        # Other consumers can use the seen_list to repeat until a job has been seen
         return not_seen_jobs
