@@ -10,6 +10,7 @@ postgres:
   port: 5432
   ssl_mode: disable
 rpc:
+  interval: 900
   hostname: rpc-cache
   port: 50051
   notifier-hostname: bot-notifier

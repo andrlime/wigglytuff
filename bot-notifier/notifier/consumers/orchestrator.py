@@ -21,7 +21,7 @@ class ConsumerOrchestrator:
     def __init__(self, consumers: list[Consumer], buffer: Buffer):
         self.consumers = consumers
         self.buffer = buffer
-        self.delay_interval = AppConfig().get_config_variable("interval")
+        self.delay_interval = AppConfig().get_grpc_variable("interval")
 
     def worker(self):
         while True:

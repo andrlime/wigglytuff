@@ -5,7 +5,7 @@ An abstract producer that produces anything of any type
 import threading
 import time
 
-from .scraper import Producer
+from .producer import Producer
 from scraper.core.config import AppConfig
 from scraper.core.logger import create_logger
 from scraper.rabbitmq.rabbit_queue import start_receiver, RabbitQueue

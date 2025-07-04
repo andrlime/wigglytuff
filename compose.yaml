@@ -11,7 +11,7 @@ services:
     restart: always
     healthcheck:
       test: ["CMD", "rabbitmqctl", "status"]
-      interval: 15s
+      interval: 5s
       timeout: 5s
       retries: 5
   postgres:

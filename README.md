@@ -28,8 +28,3 @@ RABBITMQ_PASSWORD=alsowhateveryouwant
 
 ## Additional Notes
 The `config.yaml` file is intended to be shared across all modules. In local development, it is sym-linked via `ln config.yaml folder/config.yaml` for all services in this repository. It is unclear if that is maintained after pushing to GitHub.
-
-## TODO
-1. Make the producer container
-2. Heartbeats to RabbitMQ queues
-3. Decouple intervals of services (check every X, send every Y)
