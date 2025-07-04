@@ -9,11 +9,11 @@ import (
 
 	"cache/core"
 	"cache/dbconn"
+	pb "cache/protobuf"
 	"cache/queue"
 	"cache/receiver"
 	"cache/rpc"
 	"cache/util"
-	pb "cache/protobuf"
 )
 
 func RabbitMqWorker(config *core.AppConfig) error {
@@ -45,9 +45,9 @@ func RabbitMqWorker(config *core.AppConfig) error {
 
 	log.Println("Starting message listener")
 	err := queue.Receive(receiver.JobItemReceiver{
-		DbConnection: dbconn,
+		DbConnection:          dbconn,
 		NotifierRpcConnection: conn,
-		NotifierRpcClient: client,
+		NotifierRpcClient:     client,
 	})
 	return err
 }

@@ -83,6 +83,9 @@ func (queue *RabbitQueue) Receive(receiver receiver.Receiver) error {
 	errChan := make(chan error)
 	go func() {
 		for d := range msgs {
+			if string(d.Body) == "NO NEW JOBS" {
+				continue
+			}
 			if err := receiver.OnReceive(d.Body); err != nil {
 				errChan <- err
 			}

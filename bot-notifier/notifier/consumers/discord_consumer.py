@@ -23,7 +23,7 @@ class DiscordConsumer(Consumer[list[JobItem]]):
             "DISCORD_WEBHOOK_URL"
         )
         logger.info("Created Discord client!")
-    
+
     def single_job_to_string(self, item: JobItem) -> str:
         return f"[{item.source_id}]\t{item.title} at **{item.company}**\t{item.url}"
 
@@ -34,7 +34,9 @@ class DiscordConsumer(Consumer[list[JobItem]]):
             return
 
         job_strings = [self.single_job_to_string(job) for job in message]
-        response = DiscordWebhook(url=self.webhook_url, content="\n".join(job_strings)).execute()
+        response = DiscordWebhook(
+            url=self.webhook_url, content="\n".join(job_strings)
+        ).execute()
 
         if response.status_code != 200:
             logger.error("FAILED to send to Discord webhook! %s", response)

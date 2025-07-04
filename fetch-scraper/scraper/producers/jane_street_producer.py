@@ -2,8 +2,6 @@
 A producer that produces Jane Street internship jobs.
 """
 
-import uuid
-import random
 import time
 
 from selenium.webdriver.common.by import By
@@ -21,7 +19,9 @@ class JaneStreetProducer(JobProducer):
     Generates and produces job listings from JS's career page
     """
 
-    def __init__(self, company_name: str, source_id: str, chrome_driver) -> None:
+    def __init__(
+        self, company_name: str, source_id: str, chrome_driver
+    ) -> None:
         super().__init__()
         self.company_name = company_name
         self.source_id = source_id
@@ -29,12 +29,16 @@ class JaneStreetProducer(JobProducer):
         self.driver = chrome_driver
 
     def produce(self) -> list[JobItem]:
-        self.driver.get("https://www.janestreet.com/join-jane-street/open-roles/?type=internship&location=all-locations")
+        self.driver.get(
+            "https://www.janestreet.com/join-jane-street/open-roles/?type=internship&location=all-locations"
+        )
         time.sleep(3)
-        
+
         new_job_list = []
 
-        children = self.driver.find_elements(By.CSS_SELECTOR, "div.students-and-new-grads.job.open")
+        children = self.driver.find_elements(
+            By.CSS_SELECTOR, "div.students-and-new-grads.job.open"
+        )
         parents = [el.find_element(By.XPATH, "..") for el in children]
 
         for job, link in zip(children, parents):
@@ -43,21 +47,29 @@ class JaneStreetProducer(JobProducer):
                 continue
             uuid = href.rstrip("/").split("/")[-1]
 
-            position_name = job.find_element(By.CSS_SELECTOR, "div.position").text.strip()
-            position_type = job.find_element(By.CSS_SELECTOR, "div.type").text.strip()
-            position_loc = job.find_element(By.CSS_SELECTOR, "div.city").text.strip()
+            position_name = job.find_element(
+                By.CSS_SELECTOR, "div.position"
+            ).text.strip()
+            position_type = job.find_element(
+                By.CSS_SELECTOR, "div.type"
+            ).text.strip()
+            position_loc = job.find_element(
+                By.CSS_SELECTOR, "div.city"
+            ).text.strip()
             if not position_name or not position_type or not position_loc:
                 continue
 
             full_title = f"{position_name} - {position_type} - {position_loc}"
 
-            new_job_list.append(JobItem(
-                uuid=f"{self.source_id}-{uuid}",
-                title=full_title,
-                company=self.company_name,
-                url=href,
-                source_id=self.source_id
-            ))
+            new_job_list.append(
+                JobItem(
+                    uuid=f"{self.source_id}-{uuid}",
+                    title=full_title,
+                    company=self.company_name,
+                    url=href,
+                    source_id=self.source_id,
+                )
+            )
 
         logger.info(
             "[=] Produced new jobs %s", [job.uuid for job in new_job_list]

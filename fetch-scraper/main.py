@@ -3,64 +3,18 @@ Producer server for fetching jobs from job boards that streams into RabbitMQ
 """
 
 import threading
-import time
 
 from scraper.core.config import AppConfig
 from scraper.core.logger import create_logger
-from scraper.rabbitmq.rabbit_queue import RabbitQueue, start_receiver
-from scraper.producers import Producer, producers
+from scraper.producers import producers
+from scraper.producers.orchestrator import ProducerOrchestrator
 
 logger = create_logger()
-
-
-def health_check():
-    with open("/tmp/healthy", "w", encoding="utf-8") as f:
-        f.write(str(time.time()))
-
-
-def producer_thread_worker(producer: Producer, queue: RabbitQueue):
-    data = producer.produce()
-    for item in data:
-        queue.send_message(producer.serialise(item))
 
 
 if __name__ == "__main__":
     config = AppConfig()
 
-    delay_interval = config.get_config_variable("interval")
-    queue_name = config.get_rmq_variable("queue_name")
-    producer_queues = [RabbitQueue(queue_name) for _ in producers]
-
-    debug_mode = config.get_rmq_variable("debug_mode")
-    if debug_mode:
-        receiver_queue = RabbitQueue(queue_name)
-
-    try:
-        if debug_mode:
-            start_receiver(receiver_queue)
-        while True:
-            logger.info("Beginning producer cycle...")
-            threads = []
-
-            for producer_, queue_ in zip(producers, producer_queues):
-                t = threading.Thread(
-                    target=producer_thread_worker,
-                    args=(
-                        producer_,
-                        queue_,
-                    ),
-                )
-                t.start()
-                threads.append(t)
-                health_check()
-
-            for t in threads:
-                t.join()
-
-            logger.info("Now sleeping %s seconds", delay_interval)
-            time.sleep(delay_interval)
-    finally:
-        for queue_ in producer_queues:
-            queue_.close()
-        if debug_mode:
-            receiver_queue.close()
+    producer_orchestrator = ProducerOrchestrator(producers)
+    logger.info("Starting orchestration service...")
+    threading.Thread(target=producer_orchestrator.worker).start()

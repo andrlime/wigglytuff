@@ -7,7 +7,6 @@ from concurrent import futures
 import grpc
 
 import threading
-import time
 
 from notifier.core.config import AppConfig
 from notifier.core.logger import create_logger

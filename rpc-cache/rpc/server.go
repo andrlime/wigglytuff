@@ -7,15 +7,15 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
-    
+
 	"cache/core"
 	"cache/dbconn"
-	"cache/util"
 	pb "cache/protobuf"
+	"cache/util"
 )
 
 type server struct {
-    pb.UnimplementedDeduplicationServiceServer
+	pb.UnimplementedDeduplicationServiceServer
 	DbConnection *dbconn.JobItemDatabaseConnection
 }
 
@@ -29,8 +29,8 @@ func (s *server) checkSingleUuid(uuid string) (*pb.CheckSeenResponse, error) {
 }
 
 func (s *server) CheckSeen(ctx context.Context, req *pb.JobItem) (*pb.CheckSeenResponse, error) {
-    log.Printf("[RPC] Checking job UUID: %s\n", req.Uuid)
-    return s.checkSingleUuid(req.Uuid)
+	log.Printf("[RPC] Checking job UUID: %s\n", req.Uuid)
+	return s.checkSingleUuid(req.Uuid)
 }
 
 func (s *server) CheckSeenBatch(ctx context.Context, req *pb.JobItemList) (*pb.CheckSeenListResponse, error) {
@@ -53,10 +53,10 @@ func (s *server) CheckSeenBatch(ctx context.Context, req *pb.JobItemList) (*pb.C
 func StartRpcServer(config *core.AppConfig) error {
 	port := config.RpcConfig.Port
 	portString := fmt.Sprintf(":%v", port)
-    lis, err := net.Listen("tcp", portString)
-    if err != nil {
-        return util.WrapError("StartRpcServer:Listen()", err)
-    }
+	lis, err := net.Listen("tcp", portString)
+	if err != nil {
+		return util.WrapError("StartRpcServer:Listen()", err)
+	}
 
 	dbconn := dbconn.JobItemDbConnFactory(config)
 	connectErr := dbconn.Connect()
@@ -65,15 +65,15 @@ func StartRpcServer(config *core.AppConfig) error {
 	}
 	defer dbconn.Close()
 
-    grpcServer := grpc.NewServer()
-    pb.RegisterDeduplicationServiceServer(grpcServer, &server{
+	grpcServer := grpc.NewServer()
+	pb.RegisterDeduplicationServiceServer(grpcServer, &server{
 		DbConnection: dbconn,
 	})
 
-    log.Printf("Starting gRPC server on port %v\n", port)
-    if err := grpcServer.Serve(lis); err != nil {
-        return util.WrapError("StartRpcServer:Serve()", err)
-    }
+	log.Printf("Starting gRPC server on port %v\n", port)
+	if err := grpcServer.Serve(lis); err != nil {
+		return util.WrapError("StartRpcServer:Serve()", err)
+	}
 
 	return nil
 }
