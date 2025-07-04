@@ -7,6 +7,7 @@ from concurrent import futures
 import grpc
 
 import threading
+import time
 
 from notifier.core.config import AppConfig
 from notifier.core.logger import create_logger
@@ -21,6 +22,9 @@ logger = create_logger()
 
 if __name__ == "__main__":
     config = AppConfig()
+
+    logger.info("Sleeping 30 seconds to allow RPC clients to init...")
+    time.sleep(30)
 
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     buffer = SharedQueue()

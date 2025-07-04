@@ -65,9 +65,6 @@ func main() {
 	config := core.ParseConfig()
 	log.Printf("Finished reading AppConfig %v\n", config)
 
-	log.Println("Sleeping 5 seconds until RabbitMQ and Postgres start...")
-	time.Sleep(5 * time.Second)
-
 	errChan := make(chan error, 2)
 	go func() {
 		errChan <- RabbitMqWorker(config)
