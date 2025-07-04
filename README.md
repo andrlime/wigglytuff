@@ -4,7 +4,8 @@ The purpose of this project is to have real-time notifications of new job postin
 
 ## Installing protobuf for Go
 1. `go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest`
-2. `export PATH="$PATH:$(go env GOPATH)/bin"`
+2. `go install google.golang.org/protobuf/cmd/protoc-gen-go@latest`
+3. `export PATH="$PATH:$(go env GOPATH)/bin"`
 
 ## Architecture
 Using Docker Compose,
