@@ -19,8 +19,8 @@ class JobPushServiceServicer(job_pb2_grpc.JobPushServiceServicer):
 
     def SendJobs(self, request, context):
         if len(request.jobs) == 0:
-            logger.info(f"Received no jobs")
+            logger.info("Received no jobs")
         for job in request.jobs:
-            logger.info(f"Received job {job.uuid}")
+            logger.info("Received job %s", job.uuid)
             self.buffer.push(job)
         return job_pb2.Ack(success=True)

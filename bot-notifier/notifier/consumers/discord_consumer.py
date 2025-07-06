@@ -8,7 +8,7 @@ from notifier.models.job_pb2 import JobItem
 from notifier.core.config import AppConfig
 from notifier.core.logger import create_logger
 
-from discord_webhook import DiscordWebhook
+from discord_webhook import DiscordEmbed, DiscordWebhook
 
 logger = create_logger()
 
@@ -22,10 +22,23 @@ class DiscordConsumer(Consumer[list[JobItem]]):
         self.webhook_url = AppConfig().get_environment_variable(
             "DISCORD_WEBHOOK_URL"
         )
+        self.colors_map = {
+            "haitou": 11316396,
+            "jane-street-2026": 1715357,
+            "jump-trading-2026": 12004149,
+        }
         logger.info("Created Discord client!")
 
     def single_job_to_string(self, item: JobItem) -> str:
         return f"[{item.source_id}]\t{item.title} at **{item.company}**\t{item.url}"
+
+    def single_job_to_json(self, item: JobItem) -> str:
+        return {
+            "color": self.color_map.get(item.source_id, "#CDCDCD"),
+            "author": item.company,
+            "title": item.title,
+            "url": item.url,
+        }
 
     @override
     def consume(self, message: list[JobItem]):
@@ -34,26 +47,32 @@ class DiscordConsumer(Consumer[list[JobItem]]):
             return
 
         chunks = []
-        job_strings = [self.single_job_to_string(job) for job in message]
-    
-        current_chunk = ""
-        for s in job_strings:
-            if len(current_chunk) + len(s) > 1900:
-                chunks.append(current_chunk)
-                current_chunk = s
-            else:
-                current_chunk += "\n" + s
+        this_chunk = []
+        for job in message:
+            this_chunk.append(job)
+            if len(this_chunk) == 10:
+                chunks.append(this_chunk)
+                this_chunk = []
 
-        if current_chunk:
-            chunks.append(current_chunk)
-        
+        if this_chunk:
+            chunks.append(this_chunk)
+
         for c in chunks:
-            if "jane-street" in c:
-                c = "<@274430419917733888>\n" + c
-            response = DiscordWebhook(
-                url=self.webhook_url, content=c
-            ).execute()
+            webhook = DiscordWebhook(url=self.webhook_url)
 
+            for item in c:
+                embed = DiscordEmbed(
+                    url=item.url,
+                    title=item.company,
+                    description=f"""
+[{item.source_id}] **{item.company}** - {item.title}
+{item.url}
+                    """,
+                    color=self.colors_map.get(item.source_id, "#CDCDCD"),
+                )
+                webhook.add_embed(embed)
+
+            response = webhook.execute()
             if response.status_code != 200:
                 logger.error("FAILED to send to Discord webhook! %s", response)
             else:
