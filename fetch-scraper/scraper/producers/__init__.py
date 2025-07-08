@@ -9,6 +9,7 @@ from .sample_job_producer import SampleJobProducer as SampleJobProducer
 from .haitou_producer import HaitouProducer as HaitouProducer
 from .jump_trading_producer import JumpTradingProducer as JumpTradingProducer
 from .jane_street_producer import JaneStreetProducer as JaneStreetProducer
+from .capital_one_producer import CapitalOneProducer as CapitalOneProducer
 
 from scraper.driver import driver_factory
 
@@ -17,5 +18,5 @@ producers = [
     # SampleJobProducer("Small Finance Company", "some-quant-company"),
     HaitouProducer("haitou"),
     JumpTradingProducer("Jump Trading", "jump-trading-2026", driver_factory()),
-    JaneStreetProducer("Jane Street", "jane-street-2026", driver_factory()),
+    CapitalOneProducer("Capital One", "c1-2026", driver_factory()),
 ]
