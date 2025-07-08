@@ -26,7 +26,7 @@ class DiscordConsumer(Consumer[list[JobItem]]):
             "haitou": 11316396,
             "jane-street-2026": 1715357,
             "jump-trading-2026": 12004149,
-            "c1-2026": 13378599
+            "c1-tech-2026": 13378599
         }
         logger.info("Created Discord client!")
 

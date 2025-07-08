@@ -18,5 +18,5 @@ producers = [
     # SampleJobProducer("Small Finance Company", "some-quant-company"),
     HaitouProducer("haitou"),
     JumpTradingProducer("Jump Trading", "jump-trading-2026", driver_factory()),
-    CapitalOneProducer("Capital One", "c1-2026", driver_factory()),
+    CapitalOneProducer("Capital One", "c1-tech-2026", driver_factory()),
 ]
