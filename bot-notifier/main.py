@@ -10,7 +10,7 @@ import threading
 
 from notifier.core.config import AppConfig
 from notifier.core.logger import create_logger
-from notifier.consumers import consumers
+from notifier.consumers import consumers, SlackConsumer
 from notifier.consumers.orchestrator import ConsumerOrchestrator
 from notifier.buffer.shared_queue import SharedQueue
 import notifier.servicers as servicers
