@@ -102,6 +102,7 @@ services:
     restart: always
     environment:
       DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
+      DISCORD_WEBHOOK_URL_KEVIN: ${DISCORD_WEBHOOK_URL_KEVIN}
       SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
     depends_on:
       rabbitmq:
