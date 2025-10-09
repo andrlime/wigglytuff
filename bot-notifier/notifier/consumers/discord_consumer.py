@@ -18,9 +18,9 @@ class DiscordConsumer(Consumer[list[JobItem]]):
     Discord consumer that sends via a Discord bot
     """
 
-    def __init__(self):
+    def __init__(self, env_variable_name: str):
         self.webhook_url = AppConfig().get_environment_variable(
-            "DISCORD_WEBHOOK_URL"
+            env_variable_name
         )
         self.colors_map = {
             "haitou": 11316396,

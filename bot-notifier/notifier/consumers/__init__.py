@@ -6,4 +6,8 @@ from .consumer import Consumer as Consumer
 from .discord_consumer import DiscordConsumer as DiscordConsumer
 from .slack_consumer import SlackConsumer as SlackConsumer
 
-consumers = [DiscordConsumer(), SlackConsumer()]
+consumers = [
+    DiscordConsumer("DISCORD_WEBHOOK_URL"),
+    DiscordConsumer("DISCORD_WEBHOOK_URL_KEVIN"),
+    SlackConsumer()
+]
