@@ -2,6 +2,7 @@ package dbconn
 
 import (
 	"fmt"
+	"time"
 
 	"database/sql"
 	_ "github.com/lib/pq"
@@ -53,9 +54,10 @@ func (dbConn *JobItemDatabaseConnection) Connect() error {
 		return util.WrapError("Db:Connect:Ping()", healthcheckErr)
 	}
 
-	db.SetConnMaxLifetime(0)
-	db.SetMaxIdleConns(32)
-	db.SetMaxOpenConns(32)
+	db.SetConnMaxLifetime(30 * time.Minute)
+	db.SetConnMaxIdleTime(5 * time.Minute)
+	db.SetMaxIdleConns(10)
+	db.SetMaxOpenConns(20)
 
 	dbConn.Conn = db
 	return nil
